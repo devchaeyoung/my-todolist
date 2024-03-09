@@ -33,18 +33,41 @@ export default function Main() {
     }
   };
 
-  const onDeleteTodo = e => {
-    console.log("delete@@@", e);
+  const onDeleteTodo = id => {
     const newState = todos.filter(todo => todo.id !== id);
     setTodos(newState);
   };
 
-  useEffect(() => {}, [todos]);
+  const onChangeDone = id => {
+    const newState = todos.map(todo => {
+      if (todo.id === id) {
+        return {
+          ...todo,
+          done: !todo.done,
+        };
+      } else {
+        return todo;
+      }
+    });
+
+    setTodos(newState);
+  };
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  useEffect(() => {
+    const storageData = localStorage.getItem("todos");
+    if (storageData) {
+      setTodos(JSON.parse(storageData));
+    }
+  }, []);
 
   return (
     <>
       <AddTodosInput onChange={onChangeText} onKeyDown={handleKeydown} value={text} onClick={onAddTodo} />
-      <TodosBoard onClick={onDeleteTodo} />
+      <TodosBoard onDelete={onDeleteTodo} onChangeDone={onChangeDone} />
     </>
   );
 }

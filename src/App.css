@@ -1,12 +1,17 @@
 .container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  margin: 30px;
 }
 
 .add-todo-input {
-  flex-basis: 100px;
+  flex-grow: 1;
 }
 
 .todo-board {
-  flex-basis: 200px;
+  flex-grow: 3;
+  height: 300px;
+  width: 300px;
 }

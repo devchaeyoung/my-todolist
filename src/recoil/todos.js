@@ -5,6 +5,7 @@ const todoListState = atom({
   default: defaultValue(),
 });
 
+// recoil의 초기값을 설정하기 위한 초기함수
 function defaultValue() {
   const storageData = localStorage.getItem("todos");
   if (!storageData) {

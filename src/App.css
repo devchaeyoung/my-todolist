@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.add-todo-input {
+  flex-basis: 100px;
+}
+
+.todo-board {
+  flex-basis: 200px;
+}

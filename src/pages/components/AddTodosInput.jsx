@@ -1,11 +1,16 @@
 import React from "react";
-import { StyledButton } from "../../styles/Button.style";
+import Button from "../../components/Button";
+import styled from "styled-components";
 
 export default function AddTodosInput({ onChange, value, onKeyDown, onClick }) {
   return (
-    <div className="add-todo-input">
+    <StyledAddTodoInput>
       <input type="text" onChange={onChange} onKeyDown={onKeyDown} value={value} />
-      <StyledButton onClick={onClick}>Enter</StyledButton>
-    </div>
+      <Button onClick={onClick}>Enter</Button>
+    </StyledAddTodoInput>
   );
 }
+
+const StyledAddTodoInput = styled.div`
+  flex-grow: 1;
+`;

@@ -4,13 +4,14 @@ import { useRecoilValue } from "recoil";
 import todoListState from "../../recoil/todos";
 import Checkbox from "../../components/Checkbox";
 
-import { StyledButton } from "../../styles/Button.style.js";
+import Button from "../../components/Button";
+import styled from "styled-components";
 
 export default function TodosBoard({ onDelete, onChangeDone }) {
   const todos = useRecoilValue(todoListState);
 
   return (
-    <div className="todo-board">
+    <StyledTodoBoard>
       <ul>
         {todos.map(item => {
           return (
@@ -23,11 +24,17 @@ export default function TodosBoard({ onDelete, onChangeDone }) {
               >
                 {item.todo}
               </Checkbox>
-              <StyledButton onClick={() => onDelete(item.id)}>X</StyledButton>
+              <Button onClick={() => onDelete(item.id)}>X</Button>
             </li>
           );
         })}
       </ul>
-    </div>
+    </StyledTodoBoard>
   );
 }
+
+const StyledTodoBoard = styled.div`
+  flex-grow: 3;
+  height: 300px;
+  width: 300px;
+`;

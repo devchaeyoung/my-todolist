@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import "../App.css";
 
 import todoListState from "../recoil/todos";
 import AddTodosInput from "./components/AddTodosInput";
 import TodosBoard from "./components/TodosBoard";
+import { styled } from "styled-components";
 
 let id = 0;
 
@@ -67,9 +67,17 @@ export default function Main() {
   }, []);
 
   return (
-    <div className="container">
+    <StyledContainer>
       <AddTodosInput onChange={onChangeText} onKeyDown={handleKeydown} value={inputText} onClick={onAddTodo} />
       <TodosBoard onDelete={onDeleteTodo} onChangeDone={onChangeDone} />
-    </div>
+    </StyledContainer>
   );
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 30px;
+`;

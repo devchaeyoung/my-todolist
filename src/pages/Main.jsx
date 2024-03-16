@@ -3,12 +3,19 @@ import { useRecoilState } from "recoil";
 
 import todoListState from "../recoil/todos";
 import AddTodosInput from "./components/AddTodosInput";
-import TodosBoard from "./components/TodosBoard";
+import TodoList from "./components/TodosBoard";
 import { styled } from "styled-components";
 
 let id = 0;
+const storageData = localStorage.getItem("todos");
+if (!storageData) {
+  id = 0;
+} else {
+  id = JSON.parse(storageData).length;
+}
 
 export default function Main() {
+  const [userName, setUserName] = useState("");
   const [todos, setTodos] = useRecoilState(todoListState);
   const [inputText, setInputText] = useState("");
 
@@ -29,7 +36,7 @@ export default function Main() {
     id++;
   };
 
-  const handleKeydown = e => {
+  const handleKeyUp = e => {
     if (e.key === "Enter") {
       onAddTodo();
     }
@@ -40,17 +47,13 @@ export default function Main() {
     setTodos(newState);
   };
 
-  const onChangeDone = id => {
-    const newState = todos.map(todo => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          done: !todo.done,
-        };
-      } else {
-        return todo;
-      }
-    });
+  const onUpdateTodoText = (id, updateText) => {
+    const newTodos = todos.map(todo => (todo.id === id ? { ...todo, todo: updateText } : todo));
+    setTodos(newTodos);
+  };
+
+  const onUpdateDone = id => {
+    const newState = todos.map(todo => (todo.id === id ? { ...todo, done: !todo.done } : todo));
 
     setTodos(newState);
   };
@@ -60,7 +63,7 @@ export default function Main() {
   }, [todos]);
 
   useEffect(() => {
-    const storageData = localStorage.getItem("todos");
+    const storageData = localStorage.getItem("todos") || [];
     if (storageData) {
       setTodos(JSON.parse(storageData));
     }
@@ -68,8 +71,8 @@ export default function Main() {
 
   return (
     <StyledContainer>
-      <AddTodosInput onChange={onChangeText} onKeyDown={handleKeydown} value={inputText} onClick={onAddTodo} />
-      <TodosBoard onDelete={onDeleteTodo} onChangeDone={onChangeDone} />
+      <AddTodosInput onChange={onChangeText} onKeyUp={handleKeyUp} value={inputText} onClick={onAddTodo} />
+      <TodoList onDelete={onDeleteTodo} onChangeDone={onUpdateDone} onUpdateTodoText={onUpdateTodoText} />
     </StyledContainer>
   );
 }

@@ -36,10 +36,16 @@ export default function Main() {
     id++;
   };
 
-  const handleKeyUp = e => {
-    if (e.key === "Enter") {
+  const handleKeyDown = e => {
+    console.log(e.key);
+    if (inputText.trim() === "") return;
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
       onAddTodo();
     }
+    // if (e.isComposing || e.keyCode === 229) return;
+    // if (e.key === "Enter") {
+    //   onAddTodo();
+    // }
   };
 
   const onDeleteTodo = id => {
@@ -71,7 +77,7 @@ export default function Main() {
 
   return (
     <StyledContainer>
-      <AddTodosInput onChange={onChangeText} onKeyUp={handleKeyUp} value={inputText} onClick={onAddTodo} />
+      <AddTodosInput onChange={onChangeText} onKeyDown={handleKeyDown} value={inputText} onClick={onAddTodo} />
       <TodoList onDelete={onDeleteTodo} onChangeDone={onUpdateDone} onUpdateTodoText={onUpdateTodoText} />
     </StyledContainer>
   );

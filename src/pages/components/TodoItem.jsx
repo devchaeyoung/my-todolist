@@ -10,7 +10,7 @@ export default function TodoItem({ todo, onDelete, onChangeDone, onUpdateTodoTex
     setUpdateTextItem(e.target.value);
   };
 
-  const onKeyUp = e => {
+  const onKeyDown = e => {
     if (e.key === "Enter") {
       onUpdateTodoText(todo.id, updateTextItem);
       setIsEditClicked(false);
@@ -29,7 +29,7 @@ export default function TodoItem({ todo, onDelete, onChangeDone, onUpdateTodoTex
   return (
     <li>
       {isEditClicked ? (
-        <input value={updateTextItem} onChange={onChangeUpdateTextItem} onKeyUp={onKeyUp} />
+        <input value={updateTextItem} onChange={onChangeUpdateTextItem} onKeyDown={onKeyDown} />
       ) : (
         <Checkbox
           isChecked={todo.done}

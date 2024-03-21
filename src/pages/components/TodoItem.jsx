@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 
 import Checkbox from "../../components/Checkbox";
+import Input from "../../components/Input";
 import Button from "../../components/Button";
 
-export default function TodoItem({ todo, onDelete, onChangeDone, onUpdateTodoText }) {
+export default function TodoItem({ todo, isDone, onDelete, onChangeDone, onUpdateTodoText }) {
   const [isEditClicked, setIsEditClicked] = useState(false);
   const [updateTextItem, setUpdateTextItem] = useState(todo.todo);
+
   const onChangeUpdateTextItem = e => {
     setUpdateTextItem(e.target.value);
   };
@@ -29,7 +31,7 @@ export default function TodoItem({ todo, onDelete, onChangeDone, onUpdateTodoTex
   return (
     <li>
       {isEditClicked ? (
-        <input value={updateTextItem} onChange={onChangeUpdateTextItem} onKeyDown={onKeyDown} />
+        <Input value={updateTextItem} onChange={onChangeUpdateTextItem} onKeyDown={onKeyDown} />
       ) : (
         <Checkbox
           isChecked={todo.done}
@@ -40,7 +42,7 @@ export default function TodoItem({ todo, onDelete, onChangeDone, onUpdateTodoTex
           {todo.todo}
         </Checkbox>
       )}
-      <Button onClick={handleClickButton}>{isEditClicked ? "✔️" : "✏️"}</Button>
+      {isDone ? "" : <Button onClick={handleClickButton}>{isEditClicked ? "✔️" : "✏️"}</Button>}
       <Button onClick={() => onDelete(todo.id)}>X</Button>
     </li>
   );

@@ -1,13 +1,14 @@
 import { RecoilRoot } from "recoil";
+import Headers from "./components/Header";
 import Main from "./pages/Main";
-import Header from "./components/Header";
+
 import GlobalStyle from "./style/globalStyle";
 
 function App() {
   return (
     <RecoilRoot>
       <GlobalStyle />
-      <Header />
+      <Headers />
       <Main />
     </RecoilRoot>
   );

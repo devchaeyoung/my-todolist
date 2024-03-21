@@ -2,25 +2,42 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 
 import todoListState from "../recoil/todos";
+
+import Greeting from "../components/Greeting";
+import Input from "../components/Input";
 import AddTodosInput from "./components/AddTodosInput";
-import TodoList from "./components/TodosBoard";
+import TodoList from "./components/TodosList";
 import { styled } from "styled-components";
 
 let id = 0;
+
 const storageData = localStorage.getItem("todos");
+
 if (!storageData) {
   id = 0;
 } else {
   id = JSON.parse(storageData).length;
 }
 
+const storageUserName = localStorage.getItem("userprofile") || "";
+
 export default function Main() {
   const [userName, setUserName] = useState("");
+  const [isThereName, setIsThereName] = useState(false);
   const [todos, setTodos] = useRecoilState(todoListState);
   const [inputText, setInputText] = useState("");
 
   const onChangeText = e => {
     setInputText(e.target.value);
+  };
+
+  const onAddUserName = () => {
+    if (inputText.trim() === "") return alert("이름을 입력하세요");
+    const newUser = {
+      id: new Date(),
+      name: inputText,
+    };
+    setUserName();
   };
 
   const onAddTodo = () => {
@@ -37,15 +54,10 @@ export default function Main() {
   };
 
   const handleKeyDown = e => {
-    console.log(e.key);
     if (inputText.trim() === "") return;
     if (e.key === "Enter" && !e.nativeEvent.isComposing) {
       onAddTodo();
     }
-    // if (e.isComposing || e.keyCode === 229) return;
-    // if (e.key === "Enter") {
-    //   onAddTodo();
-    // }
   };
 
   const onDeleteTodo = id => {
@@ -77,6 +89,7 @@ export default function Main() {
 
   return (
     <StyledContainer>
+      {isThereName ? <Greeting /> : <p>Welcome !{userName}</p>}
       <AddTodosInput onChange={onChangeText} onKeyDown={handleKeyDown} value={inputText} onClick={onAddTodo} />
       <TodoList onDelete={onDeleteTodo} onChangeDone={onUpdateDone} onUpdateTodoText={onUpdateTodoText} />
     </StyledContainer>

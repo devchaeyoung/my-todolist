@@ -13,11 +13,10 @@ const StyledHeader = styled.header`
   flex-direction: column;
 `;
 
-export default function Header(props) {
+export default function Header() {
   return (
     <StyledHeader>
       <StyledH1>TO DO LIST</StyledH1>
-      <p>Welcome !{props.name}</p>
     </StyledHeader>
   );
 }

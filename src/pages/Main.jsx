@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 
 import todoListState from "../recoil/todos";
+import userProfileState from "../recoil/userprofile";
 
 import Greeting from "../components/Greeting";
-import Input from "../components/Input";
+
 import AddTodosInput from "./components/AddTodosInput";
 import TodoList from "./components/TodosList";
 import { styled } from "styled-components";
@@ -19,25 +20,34 @@ if (!storageData) {
   id = JSON.parse(storageData).length;
 }
 
-const storageUserName = localStorage.getItem("userprofile") || "";
+const storageUserName = localStorage.getItem("userprofile") || {};
 
 export default function Main() {
+  const [userProfile, setUserProfile] = useRecoilState(userProfileState);
+  const [isThereName, setIsThereName] = useState(false); //이름 있는지 없는지
+  const [todos, setTodos] = useRecoilState(todoListState); // 투두상태
   const [userName, setUserName] = useState("");
-  const [isThereName, setIsThereName] = useState(false);
-  const [todos, setTodos] = useRecoilState(todoListState);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(""); // 투두 인풋
+  const [inputName, setInputName] = useState("");
 
   const onChangeText = e => {
     setInputText(e.target.value);
   };
 
-  const onAddUserName = () => {
-    if (inputText.trim() === "") return alert("이름을 입력하세요");
+  const onAddUserName = e => {
     const newUser = {
       id: new Date(),
-      name: inputText,
+      name: inputName,
     };
-    setUserName();
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+      if (inputName.trim() === "") return alert("이름을 입력하세요");
+      setUserProfile(newUser);
+      setIsThereName(true);
+    }
+  };
+
+  const onChangeInputName = e => {
+    setInputName(e.target.value);
   };
 
   const onAddTodo = () => {
@@ -48,12 +58,14 @@ export default function Main() {
       create_time: new Date(),
       done: false,
     };
+    console.log(todos);
+    console.log("-------todos check-------");
     setTodos(todos.concat(newTodo));
     setInputText("");
     id++;
   };
 
-  const handleKeyDown = e => {
+  const handleKeyDownTodo = e => {
     if (inputText.trim() === "") return;
     if (e.key === "Enter" && !e.nativeEvent.isComposing) {
       onAddTodo();
@@ -81,17 +93,24 @@ export default function Main() {
   }, [todos]);
 
   useEffect(() => {
-    const storageData = localStorage.getItem("todos") || [];
-    if (storageData) {
-      setTodos(JSON.parse(storageData));
+    if (!storageUserName) {
+      setIsThereName(false);
+    } else {
+      setUserName(userProfile.name);
     }
-  }, []);
+  }, [storageUserName]);
 
   return (
     <StyledContainer>
-      {isThereName ? <Greeting /> : <p>Welcome !{userName}</p>}
-      <AddTodosInput onChange={onChangeText} onKeyDown={handleKeyDown} value={inputText} onClick={onAddTodo} />
-      <TodoList onDelete={onDeleteTodo} onChangeDone={onUpdateDone} onUpdateTodoText={onUpdateTodoText} />
+      {isThereName ? (
+        <>
+          <p>Welcome ! {userProfile.name}</p>
+          <AddTodosInput onChange={onChangeText} onKeyDown={handleKeyDownTodo} value={inputText} onClick={onAddTodo} />
+          <TodoList onDelete={onDeleteTodo} onChangeDone={onUpdateDone} onUpdateTodoText={onUpdateTodoText} />
+        </>
+      ) : (
+        <Greeting value={inputName} onKeyDown={onAddUserName} onChange={onChangeInputName} />
+      )}
     </StyledContainer>
   );
 }

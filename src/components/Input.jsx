@@ -2,10 +2,10 @@ import React from "react";
 import { styled } from "styled-components";
 
 export default function Input(props) {
-  return <StyledContainer type="text" {...props} />;
+  return <StyledInput type="text" {...props} />;
 }
 
-const StyledContainer = styled.input.attrs(props => ({
+const StyledInput = styled.input.attrs(props => ({
   type: "text",
   height: props.height || "35px",
   width: props.width || "200px",
